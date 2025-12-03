@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      <title>Hope UI | Responsive Bootstrap 5 Admin Dashboard Template</title>
+      <title>{{ config('app.name') }} | Responsive Bootstrap 5 Admin Dashboard Template</title>
       
       <!-- Favicon -->
       <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico')}}" />
@@ -13,9 +13,9 @@
       
 
             <!-- Aos Animation Css -->
-      <link rel="stylesheet" href="../assets/vendor/aos/dist/aos.css" />
+      <link rel="stylesheet" href="{{asset('assets/vendor/aos/dist/aos.css')}}" />
       
-      <!-- Hope Ui Design System Css -->
+      <!-- Design System Css -->
       <link rel="stylesheet" href="{{ asset('assets/css/hope-ui.min.css?v=2.0.0')}}" />
       
       <!-- Custom Css -->
@@ -30,7 +30,8 @@
       <!-- RTL Css -->
       <link rel="stylesheet" href="{{ asset('assets/css/rtl.min.css')}}"/>
 
-      
+      <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
       
   </head>
   <body class=" " data-bs-spy="scroll" data-bs-target="#elements-section" data-bs-offset="0" tabindex="0">
@@ -41,8 +42,11 @@
       </div>    
     </div>
     <!-- loader END -->
-    
+      @include('layouts.sidebar')
       @yield('content')
+
+
+ 
     
     <!-- Library Bundle Script -->
     <script src="{{ asset('assets/js/core/libs.min.js')}}"></script>
@@ -74,6 +78,9 @@
     
     <!-- App Script -->
     <script src="{{ asset('assets/js/hope-ui.js')}}" defer></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+   @stack('script')
     
   </body>
 </html>

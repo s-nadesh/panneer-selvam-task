@@ -2,16 +2,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::paginate(10);
-        return view('users.index', compact('users'));
+        return view('users.index');
     }
+
+    public function getUsers()
+{
+    return DataTables::of(User::select(['id','name','email']))
+        ->addColumn('action', function ($user) {
+            return view('users.actions', compact('user'))->render();
+        })
+        ->rawColumns(['action'])
+        ->make(true);
+}
+
 
     public function create()
     {

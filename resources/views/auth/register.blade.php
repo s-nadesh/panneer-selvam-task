@@ -35,9 +35,9 @@
                               </div>
                               <!--logo End-->
                               
-                              <h4 class="logo-title ms-3">Hope UI</h4>
+                              <h4 class="logo-title ms-3">{{ config('app.name') }}</h4>
                            <h2 class="mb-2 text-center">Sign Up</h2>
-                           <p class="text-center">Create your Hope UI account.</p>
+                           <p class="text-center">Create your {{ config('app.name') }} account.</p>
                            <form method="POST" action="{{ route('register') }}">
                             @csrf
                               <div class="row">

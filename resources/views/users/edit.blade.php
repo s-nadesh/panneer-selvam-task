@@ -3,7 +3,6 @@
 @section('title', 'dashboard')
 
 @section('content')
-    @include('layouts.sidebar')
     <main class="main-content">
         <div class="position-relative iq-banner">
             <!--Nav Start-->
@@ -82,7 +81,7 @@
                                 <label class="form-label" for="email">Email:</label>
                                 <input type="text" class="form-control" id="email" placeholder="email" name="email" value="{{ $user->email }}">
                                 </div>
-                                <button class="mt-4 px-4 py-2 bg-yellow-600 text-white rounded" type="submit">
+                                <button class="btn btn-primary" type="submit">
                                     Update
                                 </button>
                             </form>

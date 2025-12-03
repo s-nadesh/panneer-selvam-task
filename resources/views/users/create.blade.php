@@ -3,7 +3,6 @@
 @section('title', 'dashboard')
 
 @section('content')
-    @include('layouts.sidebar')
     <main class="main-content">
         <div class="position-relative iq-banner">
             <!--Nav Start-->
@@ -75,7 +74,7 @@
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                 @enderror
                                 </div>
-                                <button class="mt-4 px-4 py-2 bg-yellow-600 text-white rounded" type="submit">
+                                <button class="btn btn-primary" type="submit">
                                     submit
                                 </button>
                             </form>

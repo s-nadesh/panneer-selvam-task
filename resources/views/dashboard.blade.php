@@ -5,7 +5,6 @@
 
 
 @section('content')
-    @include('layouts.sidebar')
     <main class="main-content">
         <div class="position-relative iq-banner">
             <!--Nav Start-->
