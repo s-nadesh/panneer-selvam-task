@@ -51,7 +51,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <form action="{{ route('users.store') }}" method="POST">
+                            <form action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
                                 <label class="form-label" for="name">Name:</label>
@@ -60,6 +60,12 @@
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                 @enderror
                                 </div>
+
+                                <div class="form-group">
+                                    <label for="profilepic" class="form-label custom-file-input">Choose file</label>
+                                    <input class="form-control" type="file" id="profilepic" name="profilepic">
+                                </div>
+
                                 <div class="form-group">
                                 <label class="form-label" for="email">Email:</label>
                                 <input type="text" class="form-control" id="email" placeholder="email" name="email"  value="">
@@ -74,6 +80,42 @@
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                 @enderror
                                 </div>
+                                <div class="form-group">
+                                    <label for="date_of_birth"> Date of birth</label>
+                                    <input type="text" class="form-control datepicker" id="date_of_birth" name="date_of_birth" >
+                                    @error('date_of_birth')
+                                        <p class="text-danger">{{$message}}</p>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="address">User address</label>
+                                    <textarea class="form-control" id="address" rows="5" name="address"></textarea>
+                                     @error('address')
+                                        <p class="text-danger">{{$message}}</p>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="country">country</label>
+                                    <select class="form-select form-select-sm mb-3 shadow-none" id="country" name="country">
+                                        <option selected="">Open this select menu</option>
+                                        <option value="india">india</option>
+                                        <option value="china">china</option>
+                                        <option value="cuba">cuba</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="gender">gender</label>
+                                    <select class="form-select form-select-sm mb-3 shadow-none" id="gender" name="gender">
+                                        <option selected="">Open this select menu</option>
+                                        <option value="male">male</option>
+                                        <option value="female">female</option>
+                                        <option value="other">other</option>
+                                    </select>
+                                </div>
+
                                 <button class="btn btn-primary" type="submit">
                                     submit
                                 </button>
@@ -86,3 +128,13 @@
         </div>
     </main>
 @endsection
+
+@push('script')
+    <script>
+        $('.datepicker').datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                todayHighlight: true
+        });
+    </script>
+@endpush
