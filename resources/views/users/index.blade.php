@@ -19,20 +19,7 @@
                            </div>
                         </div>
                         <div class="card-body px-5">
-                           <div class="table-responsive">
-                              <table id="user-list-table" class="table table-striped">
-                                 <thead>
-                                    <tr class="ligth">
-                                          <th>ID</th>
-                                          <th>profile Image</th>
-                                          <th>Name</th>
-                                          <th>Email</th>
-                                          <th>Action</th>
-                                    </tr>
-                                 </thead>
-                              </table>
-
-                           </div>
+                           {{ $dataTable->table() }}
                         </div>
                      </div>
                   </div>
@@ -44,21 +31,5 @@
 @endsection
 
 @push('script')
-
-   <script>
-      $(function() {
-         $('#user-list-table').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: "{{ route('users.datatable') }}",
-            columns: [
-                  { data: 'id', name: 'id' },
-                  { data: 'profile_pics', name: 'profile_pic' },
-                  { data: 'name', name: 'name' },
-                  { data: 'email', name: 'email' },
-                  { data: 'action', name: 'action', orderable: false, searchable: false }
-            ]
-         });
-      });
-   </script>
+    {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
 @endpush

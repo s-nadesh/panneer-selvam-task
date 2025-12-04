@@ -7,13 +7,14 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use App\DataTables\UsersDataTable;
 
 class UserController extends Controller
 {
-    public function index(Request $request)
-    {
-        return view('users.index');
-    }
+    public function index(UsersDataTable $dataTable)
+{
+    return $dataTable->render('users.index');
+}
 
     public function getUsers()
     {
