@@ -47,7 +47,7 @@
       </div>    
     </div>
     <!-- loader END -->
-      @include('layouts.sidebar')
+      
       @yield('content')
 
 

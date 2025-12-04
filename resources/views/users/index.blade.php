@@ -3,6 +3,7 @@
 @section('title', 'dashboard')
 
 @section('content')
+@include('layouts.sidebar')
     <main class="main-content">
         <div class="position-relative iq-banner">
             <!--Nav Start-->
@@ -23,6 +24,7 @@
                                  <thead>
                                     <tr class="ligth">
                                           <th>ID</th>
+                                          <th>profile Image</th>
                                           <th>Name</th>
                                           <th>Email</th>
                                           <th>Action</th>
@@ -51,6 +53,7 @@
             ajax: "{{ route('users.datatable') }}",
             columns: [
                   { data: 'id', name: 'id' },
+                  { data: 'profile_pics', name: 'profile_pic' },
                   { data: 'name', name: 'name' },
                   { data: 'email', name: 'email' },
                   { data: 'action', name: 'action', orderable: false, searchable: false }
