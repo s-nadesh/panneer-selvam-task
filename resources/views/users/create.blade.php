@@ -52,7 +52,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            @include('forms._form', ['user' => new \App\Models\User, 'professional' => new \App\Models\ProfessionalDetail])
+                            @include('forms._userform', ['user' => new \App\Models\User, 'professional' => new \App\Models\ProfessionalDetail])
                         </div>
                     </div>
                     </div>

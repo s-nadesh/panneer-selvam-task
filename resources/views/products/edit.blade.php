@@ -47,11 +47,11 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
                             <div class="header-title">
-                                <h4 class="card-title">Edit User</h4>
+                                <h4 class="card-title">Edit product</h4>
                             </div>
                         </div>
                         <div class="card-body">
-                            @include('forms._userform', compact('user', 'professional'))
+                            @include('forms._productform', compact('product'))
                         </div>
                     </div>
                     </div>
@@ -60,17 +60,3 @@
         </div>
     </main>
 @endsection
-
-@push('script')
-    <script>
-
-        $('#gender').select2();
-        $('#country').select2();
-
-        $('.datepicker').datepicker({
-                format: 'yyyy-mm-dd',
-                autoclose: true,
-                todayHighlight: true
-        });
-    </script>
-@endpush

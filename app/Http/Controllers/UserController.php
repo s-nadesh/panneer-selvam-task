@@ -12,29 +12,29 @@ use App\DataTables\UsersDataTable;
 class UserController extends Controller
 {
     public function index(UsersDataTable $dataTable)
-{
-    return $dataTable->render('users.index');
-}
-
-    public function getUsers()
     {
-        $users = User::select('users.id','users.name','users.email','professional_details.profilepic')
-                ->leftJoin('professional_details', 'professional_details.user_id', '=', 'users.id');
-
-        return DataTables::of($users)
-            ->addColumn('profile_pics', function($user) {
-                $image = $user->profilepic 
-                    ? asset('storage/profile_pics/' . $user->profilepic)
-                    : asset('default.png');   // optional default image
-
-                return '<img src="'.$image.'" width="50" class="rounded-circle" />';
-            })
-            ->addColumn('action', function ($user) {
-                return view('users.actions', compact('user'))->render();
-            })
-            ->rawColumns(['profile_pics','action'])
-            ->make(true);
+        return $dataTable->render('users.index');
     }
+
+    // public function getUsers()
+    // {
+    //     $users = User::select('users.id','users.name','users.email','professional_details.profilepic')
+    //             ->leftJoin('professional_details', 'professional_details.user_id', '=', 'users.id');
+
+    //     return DataTables::of($users)
+    //         ->addColumn('profile_pics', function($user) {
+    //             $image = $user->profilepic 
+    //                 ? asset('storage/profile_pics/' . $user->profilepic)
+    //                 : asset('default.png');   // optional default image
+
+    //             return '<img src="'.$image.'" width="50" class="rounded-circle" />';
+    //         })
+    //         ->addColumn('action', function ($user) {
+    //             return view('users.actions', compact('user'))->render();
+    //         })
+    //         ->rawColumns(['profile_pics','action'])
+    //         ->make(true);
+    // }
 
 
     public function create()

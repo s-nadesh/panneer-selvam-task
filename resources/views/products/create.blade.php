@@ -7,7 +7,8 @@
     <main class="main-content">
         <div class="position-relative iq-banner">
             <!--Nav Start-->
-            @include('layouts.navbar')
+            @include('layouts.navbar')  
+        
             <div class="iq-navbar-header" style="height: 215px;">
               <div class="container-fluid iq-container">
                   <div class="row">
@@ -47,11 +48,11 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
                             <div class="header-title">
-                                <h4 class="card-title">Edit User</h4>
+                                <h4 class="card-title">Add New product</h4>
                             </div>
                         </div>
                         <div class="card-body">
-                            @include('forms._userform', compact('user', 'professional'))
+                            @include('forms._productform', ['product' => new \App\Models\Product])
                         </div>
                     </div>
                     </div>
@@ -60,17 +61,3 @@
         </div>
     </main>
 @endsection
-
-@push('script')
-    <script>
-
-        $('#gender').select2();
-        $('#country').select2();
-
-        $('.datepicker').datepicker({
-                format: 'yyyy-mm-dd',
-                autoclose: true,
-                todayHighlight: true
-        });
-    </script>
-@endpush
