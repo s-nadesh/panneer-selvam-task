@@ -41,20 +41,21 @@
               </div>
           </div>  
 
-          <div class="conatiner-fluid content-inner mt-n5 py-0">
-            <div>
-                <div class="row">
-                    <div class="col-12">
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-between">
-                            <div class="header-title">
-                                <h4 class="card-title">Add New product</h4>
+            <div class="conatiner-fluid content-inner mt-n5 py-0">
+                <div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between">
+                                    <div class="header-title">
+                                        <h4 class="card-title">Add New product</h4>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    @include('forms._productform', ['product' => new \App\Models\Product])
+                                </div>
                             </div>
                         </div>
-                        <div class="card-body">
-                            @include('forms._productform', ['product' => new \App\Models\Product])
-                        </div>
-                    </div>
                     </div>
                 </div>
             </div>    

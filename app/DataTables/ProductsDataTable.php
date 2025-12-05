@@ -22,6 +22,9 @@ class ProductsDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
+                    ->addColumn('category_name', function ($product){
+                        return $product->category ? $product->category->name : '-';
+                    })
                     ->addColumn('action', function ($product){
                         return view('products.action',compact('product'))->render();
                     })
@@ -36,7 +39,7 @@ class ProductsDataTable extends DataTable
      */
     public function query(Product $model): QueryBuilder
     {
-        return $model->newQuery();
+        return $model->newQuery()->with('category');
     }
 
     /**
@@ -68,7 +71,7 @@ class ProductsDataTable extends DataTable
         return [
             Column::make('id'),
             Column::make('name'),
-            Column::make('category_id'),
+            Column::make('category_name'),
             Column::make('created_at'),
             Column::make('updated_at'),
             Column::computed('action')

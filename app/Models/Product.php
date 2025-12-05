@@ -9,7 +9,11 @@ class Product extends Model
     protected $fillable = ['category_id','name','price','quantity','description'];
 
     public function productimage(){
-        return $this->hasOne(ProductImage::class);
+        return $this->hasMany(ProductImage::class);
+    }
+
+    public function category(){
+        return $this->belongsTo(Category::class,'category_id');
     }
 
 }

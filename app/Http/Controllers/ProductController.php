@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use App\DataTables\ProductsDataTable;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -52,17 +53,20 @@ class ProductController extends Controller
 
             if($request->hasFile('product_img')){
                 
-                $file = $request->file('product_img');
-                $productimage = time() . '.' . $file->getClientOriginalExtension();
+               foreach($request->file('product_img') as $file){
+                    $productimage = time() . '.' . $file->getClientOriginalExtension();
 
-                Storage::disk('public')->putFileAs('product_img', $file, $productimage);
+                    Storage::disk('public')->putFileAs('product_img', $file, $productimage);
+
+                    ProductImage::create([
+                        'image'=> $productimage,
+                        'product_id' => $insertedid->id,
+                        
+                    ]);
+                }
             }
             
-            ProductImage::create([
-                'image'=> $productimage,
-                'product_id' => $insertedid->id,
-                
-            ]);
+            
         }
         return redirect()->route('products.index')->with('success', 'Product created!');
     }
@@ -81,7 +85,8 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $category = Category::all();
-        return view('products.edit', compact('product','category'));
+        $productimg = $product->productimage;
+        return view('products.edit', compact('product','category','productimg'));
     }
 
     /**
@@ -107,18 +112,21 @@ class ProductController extends Controller
 
         if($request->hasFile('product_img')){
             
-            $file = $request->file('product_img');
-            $productimage = time() . '.' . $file->getClientOriginalExtension();
+            foreach($request->file('product_img') as $file){
+                $productimage = time() . '.' . $file->getClientOriginalExtension();
 
-            Storage::disk('public')->putFileAs('product_img', $file, $productimage);
+                Storage::disk('public')->putFileAs('product_img', $file, $productimage);
+
+                $product->productimage()->create(
+                    
+                    [
+                        'image' => $productimage
+                    ]
+                );
+            }
         }
         
-         $product->productimage()->updateOrCreate(
-            ['product_id' => $product->id],
-            [
-                'image' => $productimage
-            ]
-        );
+         
         
         return redirect()->route('products.index')->with('success', 'Product created!');
     }

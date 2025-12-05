@@ -11,9 +11,9 @@
     <div class="form-group">
         <label class="form-label" for="category_id">category_id</label>
         <select class="form-select form-select-sm mb-3 shadow-none" id="category_id" name="category_id">
-            <option selected="">Open this select menu</option>
+            <option value="0" selected="">Open this select menu</option>
             @foreach($category as $row)
-            <option value="{{$row->id}}" {{ old('category_id', optional($product)->id) == $row->id ? 'selected' : '' }}>{{$row->name}}</option>
+            <option value="{{$row->id}}" {{ old('category_id', optional($product)->category_id) == $row->id ? 'selected' : '' }}>{{$row->name}}</option>
             @endforeach
         </select>
     </div>
@@ -50,12 +50,16 @@
 
     <div class="form-group">
         <label for="product_img" class="form-label custom-file-input">Choose file</label>
-        <input class="form-control" type="file" id="product_img" name="product_img" >
+        <input class="form-control" type="file" id="product_img" name="product_img[]" multiple>
     </div>
 
-    @if($product->exists && !empty($product->product_img))
-        <div class="form-group">
-            <img src="{{ asset('storage/product_imgs/'.$product->product_img) }}" width="150" class="img-thumbnail">
+    @if($product->exists && !empty($productimg))
+        <div class="d-flex gap-3">
+            @foreach($productimg as $row)
+                <div class="form-group">
+                    <img src="{{ asset('storage/product_img/'.$row->image) }}" width="80" class="img-thumbnail">
+                </div>
+            @endforeach
         </div>
     @endif
 
