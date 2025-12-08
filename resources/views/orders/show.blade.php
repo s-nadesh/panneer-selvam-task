@@ -17,13 +17,12 @@
                         <div class="card-header bg-primary text-white rounded-top-4 py-3 d-flex justify-content-between align-items-center">
                             <h4 class="mb-0 text-white">Order Details</h4>
                             <a href="{{ route('order.index') }}" class="btn btn-light btn-sm fw-bold">
-                                ← Back
+                                <- Back
                             </a>
                         </div>
 
                         <div class="card-body p-4">
 
-                            {{-- Order Basic Info --}}
                             <div class="row mb-4">
                                 <div class="col-md-4">
                                     <p class="mb-1 fw-bold text-secondary">Order ID</p>
@@ -41,7 +40,6 @@
 
                             <hr>
 
-                            {{-- Product Items Table --}}
                             <h5 class="fw-bold mt-3 mb-3 text-primary">Order Items</h5>
 
                             <div class="table-responsive rounded">
@@ -73,7 +71,6 @@
                                 </table>
                             </div>
 
-                            {{-- Summary Box --}}
                             <div class="mt-4 p-4 rounded-4 bg-light border">
                                 <h5 class="fw-bold text-primary mb-3">Payment Summary</h5>
 

@@ -12,6 +12,8 @@ use App\DataTables\OrdersDataTable;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Mail\Orderplacedmail;
 use Illuminate\Support\Facades\Mail;
+use App\Notifications\OrderPlacedNotification;
+
 
 class OrderController extends Controller
 {
@@ -51,7 +53,13 @@ class OrderController extends Controller
         }
 
         try{
-            Mail::to($order->user->email)->send(new Orderplacedmail($order));
+
+            // mailable
+            // Mail::to($order->user->email)->send(new Orderplacedmail($order));
+            
+            //notification
+            $order->user->notify(new OrderPlacedNotification($order));
+
         }catch(\Exception $e){
             return $e->message;
         }
