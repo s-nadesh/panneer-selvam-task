@@ -8,7 +8,7 @@
         <div class="position-relative iq-banner">
             @include('layouts.navbar')
 
-            <div class="conatiner-fluid content-inner mt-n5 py-0">
+            <div class="conatiner-fluid content-inner mt-5 py-0">
                 <div>
                     <div class="row">
                         <div class="col-12">

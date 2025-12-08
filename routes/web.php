@@ -28,7 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/get-products/{category_id}', [OrderController::class, 'getProducts']);
     Route::post('/order-store', [OrderController::class, 'store'])->name('order.store');
     Route::get('/orders', [OrderController::class, 'orderlist'])->name('order.index');
-    Route::get('/ordersshow', [OrderController::class, 'show'])->name('order.show');
+    Route::get('/ordersshow/{id}', [OrderController::class, 'show'])->name('order.show');
+    Route::get('order/{id}/invoice',[OrderController::class,'donwloadinvoice'])->name('order.invoice');
 });
 
 

@@ -9,6 +9,9 @@ use App\Models\OrderItem;
 use Auth;
 use Illuminate\Http\Request;
 use App\DataTables\OrdersDataTable;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Mail\Orderplacedmail;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -26,17 +29,17 @@ class OrderController extends Controller
 
     public function store(Request $request){
         
-        $inserted_id = Order::create([
+        $order = Order::create([
                             'total_amount' => $request->total_amount,
                             'discount' => $request->discount,
                             'final_amount' => $request->final_amount,
                             'user_id' => Auth::user()->id
                         ]);
         
-        if($inserted_id->id){
+        if($order->id){
             foreach($request->product_id as $key=>$value){
                 OrderItem::create([
-                    'order_id' => $inserted_id->id,
+                    'order_id' => $order->id,
                     'category_id' => $request->category_id[$key],
                     'product_id' => $value,
                     'quantity' => $request->quantity[$key],
@@ -47,6 +50,12 @@ class OrderController extends Controller
             
         }
 
+        try{
+            Mail::to($order->user->email)->send(new Orderplacedmail($order));
+        }catch(\Exception $e){
+            return $e->message;
+        }
+
         return redirect()->back()->with('success','Order Created successfully');
     }
 
@@ -55,9 +64,19 @@ class OrderController extends Controller
 
     }
 
-    public function show(){
-        $id = Auth::user()->id;
-        $orders = Order::where('user_id',$id)->get();
+    public function show($id){
+        // $id = Auth::user()->id;
+        $orders = Order::with('items','items.order','items.product','items.category')->where('id',$id)->first();
+
         return view('orders.show', compact('orders'));
+    }
+
+    public function donwloadinvoice($id){
+
+        $order = Order::with('items.product', 'items.category', 'user')->findOrFail($id);
+
+        $pdf = pdf::loadview('orders.invoice',compact('order'));
+
+        return $pdf->download('Invoice.pdf');
     }
 }
