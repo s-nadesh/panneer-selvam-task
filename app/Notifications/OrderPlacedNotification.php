@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notification;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 
-class OrderPlacedNotification extends Notification
+class OrderPlacedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 

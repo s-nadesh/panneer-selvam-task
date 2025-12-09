@@ -44,7 +44,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td>
-                                                        <select name="category_id[]" class="form-control category">
+                                                        <select name="category_id[]" class="form-control category" required>
                                                             <option value="">Select</option>
                                                             @foreach($categories as $cat)
                                                                 <option value="{{ $cat->id }}">{{ $cat->name }}</option>
@@ -53,7 +53,7 @@
                                                     </td>
 
                                                     <td>
-                                                        <select name="product_id[]" class="form-control product">
+                                                        <select name="product_id[]" class="form-control product" required>
                                                             <option value="0">Select product</option>
                                                             @foreach($products as $row)
                                                                 <option value="{{$row->id}}"> {{ $row->name }}</option>
@@ -114,14 +114,14 @@
         $("#addRow").click(function () {
             let row = `<tr>
                 <td>
-                    <select name="category_id[]" class="form-control category">
+                    <select name="category_id[]" class="form-control category" required>
                         <option value="">Select</option>
                         @foreach($categories as $cat)
                             <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                         @endforeach
                     </select>
                 </td>
-                <td><select name="product_id[]" class="form-control product"><option value="">Select Product</option></select></td>
+                <td><select name="product_id[]" class="form-control product" required><option value="">Select Product</option></select></td>
                 <td><input type="number" name="quantity[]" value="1" class="form-control qty"></td>
                 <td><input type="text" name="price[]" class="form-control price" readonly></td>
                 <td><input type="text" name="total[]" class="form-control total" readonly></td>
