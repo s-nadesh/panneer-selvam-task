@@ -30,6 +30,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders', [OrderController::class, 'orderlist'])->name('order.index');
     Route::get('/ordersshow/{id}', [OrderController::class, 'show'])->name('order.show');
     Route::get('order/{id}/invoice',[OrderController::class,'donwloadinvoice'])->name('order.invoice');
+
+    Route::get('orders/{id}/edit', [OrderController::class, 'edit'])->name('order.edit');
+    Route::post('orders/{id}', [OrderController::class, 'update'])->name('order.update');
+
 });
 
 

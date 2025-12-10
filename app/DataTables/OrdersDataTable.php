@@ -48,7 +48,15 @@ class OrdersDataTable extends DataTable
      */
     public function query(Order $model): QueryBuilder
     {
-        return $model->newQuery()->with(['items','items.product', 'items.category']);
+        if (auth()->user()->role === 'admin') {
+            // Admin can see all
+            return $model->with(['items.product', 'items.category', 'user'])->newQuery();
+        }
+
+        // Normal user sees only their orders
+        return $model->where('user_id', auth()->id())
+                    ->with(['items.product', 'items.category', 'user'])
+                    ->newQuery();
     }
 
     /**
@@ -87,8 +95,8 @@ class OrdersDataTable extends DataTable
             Column::make('discount'),
             Column::make('created_at'),
             Column::computed('action')
-                ->exportable(true)
-                ->printable(true)
+                ->exportable(false)
+                ->printable(false)
                 ->width(60)
                 ->addClass('text-center'),
         ];

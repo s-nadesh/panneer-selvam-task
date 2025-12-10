@@ -166,6 +166,7 @@
                         <span class="mini-icon">-</span>
                     </a>
                 </li>
+                @can('manage-admin-content')
                 <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="collapse" href="#sidebar-user" role="button" aria-expanded="{{ request()->is('users*') ? 'true' : 'false' }}" aria-controls="sidebar-user">
                         <i class="icon">
@@ -324,7 +325,7 @@
                         </li>
                     </ul>
                 </li>
-
+                @endcan
                 <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="collapse" href="#sidebar-orders" role="button" aria-expanded="{{ request()->is('orders*') ? 'true' : 'false' }}" aria-controls="sidebar-orders">
                         <i class="icon">

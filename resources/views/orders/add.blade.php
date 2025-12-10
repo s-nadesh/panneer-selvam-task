@@ -20,15 +20,31 @@
                                 </div>
                                 <div class="card-body">
 
-                                    <div class="p-4 fw-bold">
-                                        <div class="d-flex align-items-center justify-content-between ">
-                                            <div><label for="">User:</label><h5> {{Auth::user()->name}}</h5></div>
-                                            <div><label for="">Date:</label><h5>{{date('d-m-Y')}}</h5></div>
-                                        </div>
-                                    </div>
+                                    
                                     
                                     <form action="{{ route('order.store') }}" method="POST">
                                         @csrf
+
+                                        <div class="p-4 fw-bold">
+                                            <div class="d-flex align-items-center justify-content-between ">
+                                                <div>
+                                                    <label for="">User:</label>
+                                                    <select name="user" class="form-control" required>
+                                                        <option value="0">Select a user</option>
+                                                        @foreach($user as $row)
+                                                            <option value="{{ $row->id }}">{{ $row->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <div class="form-group">
+                                                        <label for="ordering_date"> Date of ordering</label>
+                                                        <input type="text" class="form-control datepicker" id="ordering_date" name="ordering_date" value="{{ old('ordering_date') }}">
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
                                         <table class="table" id="orderTable">
                                             <thead>
@@ -92,9 +108,6 @@
                                             </div>
                                             
                                         </div>
-
-
-                                        
                                     </form>
                                 </div>
                             </div>
@@ -109,6 +122,13 @@
 @push('script')
 
 <script>
+
+    $('.datepicker').datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                todayHighlight: true
+        });
+
     $(document).ready(function () {
 
         $("#addRow").click(function () {

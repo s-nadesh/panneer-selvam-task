@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\User;
 use Auth;
 use Illuminate\Http\Request;
 use App\DataTables\OrdersDataTable;
@@ -21,14 +22,26 @@ class OrderController extends Controller
 
     public function index()
     {
+        $user = User::all();
         $categories = Category::all();
         $products = Product::all();
-        return view('orders.add',compact('categories','products'));
+        return view('orders.add',compact('categories','products','user'));
     }
 
     public function getProducts($category_id){
         return Product::where('category_id', $category_id)->get();
     }
+
+    public function edit($id)
+    {
+        $order = Order::with('items')->findOrFail($id);
+        $categories = Category::all();
+        $products = Product::all();
+        $user = User::all();
+
+        return view('orders.edit', compact('order','categories','products','user'));
+    }
+
 
     public function store(Request $request){
         
@@ -36,7 +49,8 @@ class OrderController extends Controller
                             'total_amount' => $request->total_amount,
                             'discount' => $request->discount,
                             'final_amount' => $request->final_amount,
-                            'user_id' => Auth::user()->id
+                            'user_id' => $request->user,
+                            'ordering_date' => $request->ordering_date,
                         ]);
         
         if($order->id){
@@ -59,9 +73,8 @@ class OrderController extends Controller
             // Mail::to($order->user->email)->send(new Orderplacedmail($order));
             
             //notification
-            $order->user->notify((new OrderPlacedNotification($order))->delay([
-                'mail' => now()->addMinutes(5),
-            ]));
+            $order->user->notify((new OrderPlacedNotification($order))->delay(now()->addMinutes(5)));
+
 
         }catch(\Exception $e){
             return $e->message;
@@ -69,6 +82,38 @@ class OrderController extends Controller
 
         return redirect()->back()->with('success','Order Created successfully');
     }
+
+    public function update(Request $request, $id)
+    {
+        $order = Order::findOrFail($id);
+
+        // Update main order
+        $order->update([
+            'ordering_date' => $request->ordering_date,
+            'user_id' => $request->user,
+            'total_amount' => $request->total_amount,
+            'discount' => $request->discount,
+            'final_amount' => $request->final_amount,
+        ]);
+
+        // Remove old order items
+        OrderItem::where('order_id', $order->id)->delete();
+
+        // Insert new items
+        foreach ($request->product_id as $key => $value) {
+            OrderItem::create([
+                'order_id' => $order->id,
+                'category_id' => $request->category_id[$key],
+                'product_id' => $value,
+                'quantity' => $request->quantity[$key],
+                'price' => $request->price[$key],
+                'total' => $request->total[$key],
+            ]);
+        }
+
+        return redirect()->route('order.index')->with('success', 'Order updated successfully');
+    }
+
 
     public function orderlist(OrdersDataTable $OrderDataTable){
         return $OrderDataTable->render('orders.index');
