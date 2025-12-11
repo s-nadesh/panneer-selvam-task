@@ -48,7 +48,7 @@ class OrdersDataTable extends DataTable
      */
     public function query(Order $model): QueryBuilder
     {
-        if (auth()->user()->role === 'admin') {
+        if (auth()->user()->hasRole('admin')) {
             // Admin can see all
             return $model->with(['items.product', 'items.category', 'user'])->newQuery();
         }

@@ -74,6 +74,42 @@
         </select>
     </div>
 
+    @foreach($modules as $module => $modulePermissions)
+                <div class="col-md-4 mb-4">
+                    <div class="border rounded p-3">
+
+                        <h5 class="mb-2 text-primary text-capitalize">
+                            {{ $module }} Module
+                        </h5>
+
+                        <!-- Select all checkbox -->
+                        <label>
+                            <input type="checkbox" class="select-all form-check-input" data-module="{{ $module }}">
+                            <strong>Select All</strong>
+                        </label>
+
+                        <div class="mt-2">
+                            @foreach($modulePermissions as $permission)
+                                <div class="form-check">
+                                    <input
+                                        class="form-check-input permission-checkbox {{ $module }}-checkbox"
+                                        type="checkbox"
+                                        name="permissions[]"
+                                        value="{{ $permission->name }}"
+                                        {{ $user->hasPermissionTo($permission->name) ? 'checked' : '' }}
+                                    >
+                                    <label class="form-check-label text-capitalize">
+                                        {{ str_replace($module.'.','', $permission->name) }}
+                                    </label>
+                                </div>
+                            @endforeach
+                        </div>
+
+                    </div>
+                </div>
+            @endforeach
+
+
     <button class="btn btn-primary" type="submit">
         {{ $user->exists ? 'Update User' : 'Create User' }}
     </button>

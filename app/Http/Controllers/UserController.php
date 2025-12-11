@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\DataTables\UsersDataTable;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+
 
 class UserController extends Controller
 {
@@ -39,7 +42,13 @@ class UserController extends Controller
 
     public function create()
     {
-        return view('users.create');
+        $modules = [
+        'users' => Permission::where('name', 'LIKE', 'users.%')->get(),
+        'products' => Permission::where('name', 'LIKE', 'products.%')->get(),
+        'categorys' => Permission::where('name', 'LIKE', 'categorys.%')->get(),
+        // add more modules…
+    ];
+        return view('users.create',compact('modules'));
     } 
 
     public function store(Request $request)
@@ -57,7 +66,9 @@ class UserController extends Controller
                         'password' => Hash::make($request->password),
                         'role' => 'user',
                     ]);
-
+        // Assign permissions
+        $selectedPermissions = $request->permissions ?? [];
+        $insertedid->syncPermissions($selectedPermissions);            
         if($insertedid->id){
 
             $profilepicture = "";
@@ -91,7 +102,14 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $professional = $user->professionalDetail;
-        return view('users.edit', compact('user','professional'));
+
+         $modules = [
+            'users' => Permission::where('name', 'LIKE', 'users.%')->get(),
+            'products' => Permission::where('name', 'LIKE', 'products.%')->get(),
+            'categorys' => Permission::where('name', 'LIKE', 'categorys.%')->get(),
+            // add more modules…
+        ];
+        return view('users.edit', compact('user','professional','modules'));
     }
 
     public function update(Request $request, User $user)
@@ -106,6 +124,10 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
         ]);
+
+        $selectedPermissions = $request->permissions ?? [];
+
+        $user->syncPermissions($selectedPermissions);
 
 
         $profilepicture = "";

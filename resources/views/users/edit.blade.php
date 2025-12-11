@@ -73,4 +73,13 @@
                 todayHighlight: true
         });
     </script>
+
+    <script>
+        // Select all permissions inside a module
+        $('.select-all').on('change', function () {
+            let module = $(this).data('module');
+            $('.' + module + '-checkbox').prop('checked', $(this).is(':checked'));
+        });
+    </script>
+
 @endpush

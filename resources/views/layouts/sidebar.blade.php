@@ -166,7 +166,7 @@
                         <span class="mini-icon">-</span>
                     </a>
                 </li>
-                @can('manage-admin-content')
+                @can('users.view')
                 <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="collapse" href="#sidebar-user" role="button" aria-expanded="{{ request()->is('users*') ? 'true' : 'false' }}" aria-controls="sidebar-user">
                         <i class="icon">
@@ -200,6 +200,7 @@
                                 <span class="item-name">User Profile</span>
                             </a>
                         </li> -->
+                        @can('users.view')
                         <li class="nav-item">
                             <a class="nav-link {{ request()->is('users/create') ? 'active' : '' }}" href="{{ route('users.create')}}">
                                 <i class="icon">
@@ -213,6 +214,8 @@
                                 <span class="item-name">Add User</span>
                             </a>
                         </li>
+                        @endcan
+                        @can('users.view')
                         <li class="nav-item">
                             <a class="nav-link {{ request()->is('users') ? 'active' : '' }}" href="{{ url('users') }}">
                                 <i class="icon">
@@ -226,8 +229,12 @@
                                 <span class="item-name">User List</span>
                             </a>
                         </li>
+                        @endcan
                     </ul>
                 </li>
+                @endcan
+
+                @can('categorys.view')
                 <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="collapse" href="#sidebar-categorys" role="button" aria-expanded="{{ request()->is('categorys*') ? 'true' : 'false' }}" aria-controls="sidebar-categorys">
                         <i class="icon">
@@ -248,6 +255,7 @@
                         </i>
                     </a>
                     <ul class="sub-nav collapse" id="sidebar-categorys" data-bs-parent="#sidebar-menu">
+                        @can('categorys.create')
                         <li class="nav-item">
                             <a class="nav-link {{ request()->is('categorys/create') ? 'active' : '' }}" href="{{ route('categorys.create')}}">
                                 <i class="icon">
@@ -261,6 +269,8 @@
                                 <span class="item-name">Add categorys</span>
                             </a>
                         </li>
+                        @endcan
+                        @can('categorys.view')
                         <li class="nav-item">
                             <a class="nav-link {{ request()->is('categorys') ? 'active' : '' }}" href="{{ url('categorys') }}">
                                 <i class="icon">
@@ -274,9 +284,12 @@
                                 <span class="item-name">categorys List</span>
                             </a>
                         </li>
+                        @endcan
                     </ul>
                 </li>
+                @endcan
 
+                @can('products.view')
                 <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="collapse" href="#sidebar-products" role="button" aria-expanded="{{ request()->is('products*') ? 'true' : 'false' }}" aria-controls="sidebar-products">
                         <i class="icon">
@@ -296,7 +309,9 @@
                             </svg>
                         </i>
                     </a>
+                    
                     <ul class="sub-nav collapse" id="sidebar-products" data-bs-parent="#sidebar-menu">
+                        @can('products.create')
                         <li class="nav-item">
                             <a class="nav-link {{ request()->is('products/create') ? 'active' : '' }}" href="{{ route('products.create')}}">
                                 <i class="icon">
@@ -310,6 +325,8 @@
                                 <span class="item-name">Add products</span>
                             </a>
                         </li>
+                        @endcan
+                        @can('products.view')
                         <li class="nav-item">
                             <a class="nav-link {{ request()->is('products') ? 'active' : '' }}" href="{{ url('products') }}">
                                 <i class="icon">
@@ -323,9 +340,12 @@
                                 <span class="item-name">products List</span>
                             </a>
                         </li>
+                        @endcan
                     </ul>
                 </li>
                 @endcan
+
+                @can('orders.view')
                 <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="collapse" href="#sidebar-orders" role="button" aria-expanded="{{ request()->is('orders*') ? 'true' : 'false' }}" aria-controls="sidebar-orders">
                         <i class="icon">
@@ -346,7 +366,7 @@
                         </i>
                     </a>
                     <ul class="sub-nav collapse" id="sidebar-orders" data-bs-parent="#sidebar-menu">
-                        
+                        @can('orders.view')
                         <li class="nav-item">
                             <a class="nav-link {{ request()->is('orders') ? 'active' : '' }}" href="{{ url('orders') }}">
                                 <i class="icon">
@@ -360,9 +380,10 @@
                                 <span class="item-name">orders List</span>
                             </a>
                         </li>
+                        @endcan
                     </ul>
                 </li>
-
+                @endcan
             </ul>
             <!-- Sidebar Menu End -->        </div>
     </div>
