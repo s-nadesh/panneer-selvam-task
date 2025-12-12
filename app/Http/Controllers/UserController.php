@@ -42,13 +42,16 @@ class UserController extends Controller
 
     public function create()
     {
-        $modules = [
-        'users' => Permission::where('name', 'LIKE', 'users.%')->get(),
-        'products' => Permission::where('name', 'LIKE', 'products.%')->get(),
-        'categorys' => Permission::where('name', 'LIKE', 'categorys.%')->get(),
-        // add more modules…
-    ];
-        return view('users.create',compact('modules'));
+        // $modules = [
+        //     'users' => Permission::where('name', 'LIKE', 'users.%')->get(),
+        //     'products' => Permission::where('name', 'LIKE', 'products.%')->get(),
+        //     'categorys' => Permission::where('name', 'LIKE', 'categorys.%')->get(),
+        //     // add more modules…
+        // ];
+
+        $roles = Role::all();
+
+        return view('users.create',compact('roles'));
     } 
 
     public function store(Request $request)
@@ -102,14 +105,14 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $professional = $user->professionalDetail;
-
+        $roles = Role::all();
          $modules = [
             'users' => Permission::where('name', 'LIKE', 'users.%')->get(),
             'products' => Permission::where('name', 'LIKE', 'products.%')->get(),
             'categorys' => Permission::where('name', 'LIKE', 'categorys.%')->get(),
             // add more modules…
         ];
-        return view('users.edit', compact('user','professional','modules'));
+        return view('users.edit', compact('user','professional', 'roles'));
     }
 
     public function update(Request $request, User $user)
@@ -125,9 +128,14 @@ class UserController extends Controller
             'email' => $request->email,
         ]);
 
-        $selectedPermissions = $request->permissions ?? [];
 
-        $user->syncPermissions($selectedPermissions);
+        if ($request->filled('role')) {
+            // replace roles with selected single role
+            $user->syncRoles($request->role);
+        } else {
+            // if none selected and you want to remove roles:
+            $user->syncRoles([]);
+        }
 
 
         $profilepicture = "";

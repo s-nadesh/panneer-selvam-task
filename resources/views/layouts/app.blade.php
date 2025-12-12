@@ -63,8 +63,11 @@
     <script src="{{ asset('assets/js/charts/widgetcharts.js')}}"></script>
     
     <!-- mapchart Script -->
-    <script src="{{ asset('assets/js/charts/vectore-chart.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+
     <script src="{{ asset('assets/js/charts/dashboard.js')}}" ></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js" ></script>
     
     <!-- fslightbox Script -->
     <script src="{{ asset('assets/js/plugins/fslightbox.js')}}"></script>

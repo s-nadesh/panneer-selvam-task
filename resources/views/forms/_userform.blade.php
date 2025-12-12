@@ -66,7 +66,7 @@
 
     <div class="form-group">
         <label class="form-label" for="gender">gender</label>
-        <select class="form-select form-select-sm mb-3 shadow-none" id="gender" name="gender">
+        <select class="form-select form-select-sm mb-3 shadow-none" id="gender" name="gender" required>
             <option selected="">Open this select menu</option>
             <option value="male" {{ old('gender', optional($professional)->gender) == 'male' ? 'selected' : '' }}>male</option>
             <option value="female" {{ old('gender', optional($professional)->gender) == 'female' ? 'selected' : '' }}>female</option>
@@ -74,41 +74,18 @@
         </select>
     </div>
 
-    @foreach($modules as $module => $modulePermissions)
-                <div class="col-md-4 mb-4">
-                    <div class="border rounded p-3">
+    <div class="form-group">
+        <label class="form-label" for="gender">Roles</label>
 
-                        <h5 class="mb-2 text-primary text-capitalize">
-                            {{ $module }} Module
-                        </h5>
-
-                        <!-- Select all checkbox -->
-                        <label>
-                            <input type="checkbox" class="select-all form-check-input" data-module="{{ $module }}">
-                            <strong>Select All</strong>
-                        </label>
-
-                        <div class="mt-2">
-                            @foreach($modulePermissions as $permission)
-                                <div class="form-check">
-                                    <input
-                                        class="form-check-input permission-checkbox {{ $module }}-checkbox"
-                                        type="checkbox"
-                                        name="permissions[]"
-                                        value="{{ $permission->name }}"
-                                        {{ $user->hasPermissionTo($permission->name) ? 'checked' : '' }}
-                                    >
-                                    <label class="form-check-label text-capitalize">
-                                        {{ str_replace($module.'.','', $permission->name) }}
-                                    </label>
-                                </div>
-                            @endforeach
-                        </div>
-
-                    </div>
-                </div>
+        <select name="role" class="form-control">
+            <option value="">-- Select role --</option>
+            @foreach($roles as $role)
+                <option value="{{ $role->name }}" {{ $user->hasRole($role->name) ? 'selected' : '' }}>
+                {{ $role->name }}
+                </option>
             @endforeach
-
+        </select>
+    </div>
 
     <button class="btn btn-primary" type="submit">
         {{ $user->exists ? 'Update User' : 'Create User' }}

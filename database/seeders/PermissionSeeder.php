@@ -18,6 +18,7 @@ class PermissionSeeder extends Seeder
             'products' => ['view', 'create', 'edit', 'delete'],
             'orders'   => ['view', 'edit'],
             'categorys'  => ['view', 'create', 'edit', 'delete'],
+            'roles'  => ['view', 'create', 'edit', 'delete'],
         ];
 
         foreach ($modules as $module => $actions) {

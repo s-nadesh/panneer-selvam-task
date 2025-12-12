@@ -17,7 +17,8 @@ class RoleSeeder extends Seeder
         $admin = Role::firstOrCreate(['name' => 'admin']);
         $user  = Role::firstOrCreate(['name' => 'user']);
 
-        // Assign admin role to specific user
-        User::find(1)->assignRole('admin');
+        $user = User::find(1);
+        $user->syncPermissions([]); // removes all direct permissions
+
     }
 }
