@@ -21,9 +21,14 @@
         <input class="form-control" type="file" id="category_img" name="category_img">
     </div>
 
-    @if($category->exists && !empty($category->category_img))
+    <div class="form-group">
+        <label class="form-label" for="description">Tags</label>
+        <input name='tags' value='@json($tags)' id="tags">    
+    </div>
+
+    @if(isset($category->images->first()->path) && !empty($category->images->first()->path))
         <div class="form-group">
-            <img src="{{ asset('storage/category_imgs/'.$category->category_img) }}" width="150" class="img-thumbnail">
+            <img src="{{ asset('storage/category_imgs/'.$category->images->first()->path) }}" width="150" class="img-thumbnail">
         </div>
     @endif
 

@@ -32,7 +32,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('orders/{id}/edit', [OrderController::class, 'edit'])->name('order.edit');
     Route::post('orders/{id}', [OrderController::class, 'update'])->name('order.update');
-
+    Route::get('tags/suggestion', [CategoryController::class, 'suggestion']);
     Route::resource('roles', RoleController::class)->middleware('auth','role:admin');
 
 

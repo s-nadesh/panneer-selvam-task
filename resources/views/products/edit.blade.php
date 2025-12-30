@@ -60,3 +60,32 @@
         </div>
     </main>
 @endsection
+
+@push('script')
+ <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var input = document.getElementById('tags');
+        
+        // Get whitelist from Laravel (passed as JSON)
+        var whitelist = @json($tags); // Blade syntax
+        
+        var tagify = new Tagify(input, {
+            enforceWhitelist: false,
+            whitelist: whitelist,
+            dropdown: {
+                enabled: 1 // Show on click
+            }
+        });
+
+        tagify.on('input',function(e){
+            let value = e.detail.value;
+            fetch(`/tags/suggestion?q=${value}`)
+                .then(res=> res.json())
+                .then(data => {
+                    tagify.whitelist = data;
+                    tagify.dropdown.show(value)
+                });
+        });
+    });
+    </script>
+@endpush

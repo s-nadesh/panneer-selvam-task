@@ -36,7 +36,7 @@
 
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"/>
 
-
+<link rel="stylesheet" href="https://unpkg.com/@yaireo/tagify/dist/tagify.css">
       
   </head>
   <body class=" " data-bs-spy="scroll" data-bs-target="#elements-section" data-bs-offset="0" tabindex="0">
@@ -63,8 +63,8 @@
     <script src="{{ asset('assets/js/charts/widgetcharts.js')}}"></script>
     
     <!-- mapchart Script -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
 
     <script src="{{ asset('assets/js/charts/dashboard.js')}}" ></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js" ></script>
@@ -91,6 +91,10 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
+   
+    
 
    @stack('script')
     

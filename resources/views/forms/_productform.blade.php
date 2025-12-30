@@ -49,6 +49,11 @@
     </div>
 
     <div class="form-group">
+        <label class="form-label" for="description">Tags</label>
+        <input name='tags' value='@json($tags)' id="tags">    
+    </div>
+
+    <div class="form-group">
         <label for="product_img" class="form-label custom-file-input">Choose file</label>
         <input class="form-control" type="file" id="product_img" name="product_img[]" multiple>
     </div>
@@ -57,7 +62,7 @@
         <div class="d-flex gap-3">
             @foreach($productimg as $row)
                 <div class="form-group">
-                    <img src="{{ asset('storage/product_img/'.$row->image) }}" width="80" class="img-thumbnail">
+                    <img src="{{ asset('storage/product_img/'.$row->path) }}" width="80" class="img-thumbnail">
                 </div>
             @endforeach
         </div>
