@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Tag;
 use App\Models\Category;
+use App\Http\Requests\CategoryStoreRequest;
+use App\Http\Requests\CategoryUpdateRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\DataTables\CategoryDataTable;
@@ -23,22 +25,15 @@ class CategoryController extends Controller
      */
     public function create(Category $category)
     {
-        $tags = $category->tags->pluck('name')->map(fn ($tag) => [
-            'value' => $tag
-        ]);   
-        return  view('categorys.create',compact('tags'));
+         
+        return  view('categorys.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CategoryStoreRequest $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'category_img' => 'required'
-        ]);
-
         $url = "";
         
         if($request->hasFile('category_img')){
@@ -50,7 +45,6 @@ class CategoryController extends Controller
 
         $category = Category::create([
             'name' => $request->name,
-            // 'category_img' => $url
         ]);
         $this->syncTags($category, $request->tags);
 
@@ -83,11 +77,8 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category)
+    public function update(CategoryUpdateRequest $request, Category $category)
     {
-        $request->validate([
-            'name' => 'required',
-        ]);
 
         $category_img = "";
         if($request->hasFile('category_img')){ 
@@ -115,6 +106,13 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        if ($category->products()->exists()) {
+            return redirect()
+                ->route('categorys.index')
+                ->with('error', 'Cannot delete category. It is assigned to products.');
+        }
+
+
         $category->delete();
         return redirect()->route('categorys.index')->with('success', 'category deleted!');
     }

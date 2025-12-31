@@ -23,7 +23,7 @@
 
     <div class="form-group">
         <label class="form-label" for="description">Tags</label>
-        <input name='tags' value='@json($tags)' id="tags">    
+        <input name='tags' value="{{ old('tags', isset($tags) ? json_encode($tags) : '[]') }}" id="tags">    
     </div>
 
     @if(isset($category->images->first()->path) && !empty($category->images->first()->path))

@@ -68,7 +68,7 @@
         var input = document.getElementById('tags');
         
         // Get whitelist from Laravel (passed as JSON)
-        var whitelist = @json($tags); // Blade syntax
+        var whitelist ; // Blade syntax
         
         var tagify = new Tagify(input, {
             enforceWhitelist: false,

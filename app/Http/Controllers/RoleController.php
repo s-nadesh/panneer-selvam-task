@@ -5,16 +5,20 @@ namespace App\Http\Controllers;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Http\Request;
+use App\DataTables\RoleDataTable;
+
+use App\Http\Requests\RoleStoreRequest;
+use App\Http\Requests\RoleUpdateRequest;
 
 class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(RoleDataTable $datatable)
     {
-        $roles = Role::with('permissions')->get();
-        return view('roles.index', compact('roles'));
+        
+        return $datatable->render('roles.index');
     }
 
     /**
@@ -32,12 +36,9 @@ class RoleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(RoleStoreRequest $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'permissions' => 'nullable|array'
-        ]);
+    
 
         $role = Role::create([
             'name' => $request->name,
@@ -75,13 +76,8 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Role $role)
+    public function update(RoleUpdateRequest $request, Role $role)
     {
- 
-        $request->validate([
-            'name' => 'required|unique:roles,name,'.$role->id,  
-            'permissions' => 'nullable|array'
-        ]);
 
         $role->update([
             'name' => $request->name,

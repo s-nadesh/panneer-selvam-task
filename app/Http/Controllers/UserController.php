@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Storage;
 use App\DataTables\UsersDataTable;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-
+use App\Http\Requests\UserStoreRequest;
+use App\Http\Requests\UserUpdateRequest;
 
 class UserController extends Controller
 {
@@ -54,24 +55,15 @@ class UserController extends Controller
         return view('users.create',compact('roles'));
     } 
 
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
-        
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6'
-        ]);
 
         $insertedid= User::create([
                         'name' => $request->name,
                         'email' => $request->email,
                         'password' => Hash::make($request->password),
-                        'role' => 'user',
                     ]);
-        // Assign permissions
-        $selectedPermissions = $request->permissions ?? [];
-        $insertedid->syncPermissions($selectedPermissions);            
+                 
         if($insertedid->id){
 
             $profilepicture = "";
@@ -110,18 +102,12 @@ class UserController extends Controller
             'users' => Permission::where('name', 'LIKE', 'users.%')->get(),
             'products' => Permission::where('name', 'LIKE', 'products.%')->get(),
             'categorys' => Permission::where('name', 'LIKE', 'categorys.%')->get(),
-            // add more modules…
         ];
         return view('users.edit', compact('user','professional', 'roles'));
     }
 
-    public function update(Request $request, User $user)
+    public function update(UserUpdateRequest $request, User $user)
     {
-
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-        ]);
 
         $user->update([
             'name' => $request->name,

@@ -9,6 +9,8 @@ use App\Models\Tag;
 use Illuminate\Http\Request;
 use App\DataTables\ProductsDataTable;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\ProductStoreRequest;
+use App\Http\Requests\ProductUpdateRequest;
 
 class ProductController extends Controller
 {
@@ -26,22 +28,15 @@ class ProductController extends Controller
     public function create(Product $product)
     {
         $category = Category::all();
-        $tags = $product->tags->pluck('name')->map(fn ($tag) => [
-            'value' => $tag
-        ]);
-        return view('products.create',compact('category','tags'));
+        
+        return view('products.create',compact('category'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'price' => 'required',
-            'quantity' => 'required'
-        ]);
 
         $insertedid= Product::create([
                         'category_id' => $request->category_id,
@@ -78,17 +73,6 @@ class ProductController extends Controller
         return redirect()->route('products.index')->with('success', 'Product created!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Product $product)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Product $product)
     {
         $category = Category::all();
@@ -102,14 +86,9 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(ProductUpdateRequest $request, Product $product)
     {
-        $request->validate([
-            'name' => 'required',
-            'price' => 'required',
-            'quantity' => 'required'
-        ]);
-
+        
         $product->update([
                         'category_id' => $request->category_id,
                         'name' => $request->name,
