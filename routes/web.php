@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TagController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -18,10 +19,15 @@ Route::get('/users/datatable', [UserController::class, 'getUsers'])->name('users
 
 Route::get('/dashboard', [HomeController::class,'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {        
+Route::middleware('auth')->group(function () {   
+
     Route::resource('users', UserController::class);
+
     Route::resource('categorys', CategoryController::class);
+
     Route::resource('products', ProductController::class);
+    Route::delete('/product-image/{image}', [ProductController::class, 'deleteimage'])->name('product_img.delete');
+
     
     Route::get('/placeorder', [OrderController::class, 'index'])->name('placeorder');
     Route::get('/get-products/{category_id}', [OrderController::class, 'getProducts']);
@@ -29,10 +35,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders', [OrderController::class, 'orderlist'])->name('order.index');
     Route::get('/ordersshow/{id}', [OrderController::class, 'show'])->name('order.show');
     Route::get('order/{id}/invoice',[OrderController::class,'donwloadinvoice'])->name('order.invoice');
-
     Route::get('orders/{id}/edit', [OrderController::class, 'edit'])->name('order.edit');
     Route::post('orders/{id}', [OrderController::class, 'update'])->name('order.update');
-    Route::get('tags/suggestion', [CategoryController::class, 'suggestion']);
+
+    Route::get('tags/suggestion', [TagController::class, 'suggestion']);
+
     Route::resource('roles', RoleController::class)->middleware('auth','role:admin');
 
 

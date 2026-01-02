@@ -39,7 +39,6 @@ class RoleController extends Controller
     public function store(RoleStoreRequest $request)
     {
     
-
         $role = Role::create([
             'name' => $request->name,
         ]);
@@ -49,14 +48,6 @@ class RoleController extends Controller
         }
 
         return redirect()->route('roles.index')->with('success','roles added succesfully');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
     }
 
     /**
@@ -93,6 +84,11 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
+        if ($role->users()->exists()) {
+            return redirect()
+                ->back()
+                ->with('error', 'Cannot delete Role. It is assigned to User.');
+        }
         $role->delete();
         return redirect()->route('roles.index')->with('success', 'Roles deleted successfully'); 
     }

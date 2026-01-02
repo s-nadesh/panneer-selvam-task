@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tag;
 use App\Models\Category;
+use App\Services\TagService;
 use App\Http\Requests\CategoryStoreRequest;
 use App\Http\Requests\CategoryUpdateRequest;
 use Illuminate\Http\Request;
@@ -32,7 +32,7 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CategoryStoreRequest $request)
+    public function store(CategoryStoreRequest $request, TagService $tagService)
     {
         $url = "";
         
@@ -46,7 +46,8 @@ class CategoryController extends Controller
         $category = Category::create([
             'name' => $request->name,
         ]);
-        $this->syncTags($category, $request->tags);
+
+        $tagService->sync($category, $request->tags);
 
         $category->images()->create([
                         'path' => $extension
@@ -77,7 +78,7 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(CategoryUpdateRequest $request, Category $category)
+    public function update(CategoryUpdateRequest $request, Category $category, TagService $tagService)
     {
 
         $category_img = "";
@@ -95,7 +96,8 @@ class CategoryController extends Controller
                         'path' => $category_img
                     ]);
         }
-        $this->syncTags($category, $request->tags);
+        $tagService->sync($category, $request->tags);
+
         $category->update(['name'=> $request->name]);
 
         return redirect()->route('categorys.index')->with('success','Category was updated');
@@ -117,24 +119,4 @@ class CategoryController extends Controller
         return redirect()->route('categorys.index')->with('success', 'category deleted!');
     }
 
-    private function syncTags($model, $tagsJson)
-    {
-        if (!$tagsJson) return;
-
-        $tags = json_decode($tagsJson, true);
-
-        $tagIds = collect($tags)->map(function ($tag) {
-            return Tag::firstOrCreate([
-                'name' => $tag['value']
-            ])->id;
-        });
-
-        $model->tags()->sync($tagIds);
-    }
-
-    public function suggestion(Request $request){
-        $data = $request->get('q');
-
-        return Tag::where('name','like',"%{$data}%")->limit(10)->get()->map(fn($q)=>['value'=>$q->name]);
-    }
 }

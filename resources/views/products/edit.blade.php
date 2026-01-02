@@ -88,4 +88,34 @@
         });
     });
     </script>
+
+    <script>
+        document.addEventListener('click', function (e) {
+
+            if (e.target.classList.contains('remove-image')) {
+
+                const imageId = e.target.dataset.id;
+
+                if (!confirm('Remove this image?')) return;
+
+                fetch(`/product-image/${imageId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById(`image-${imageId}`).remove();
+                    }
+                })
+                .catch(err => console.error(err));
+
+                $( "#productimage" ).load(window.location.href + " #productimage" );
+            }
+        });
+    </script>
+
 @endpush

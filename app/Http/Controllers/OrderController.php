@@ -13,6 +13,8 @@ use App\DataTables\OrdersDataTable;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Mail\Orderplacedmail;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Requests\OrderUpdateRequest;
+use App\Http\Requests\OrderStoreRequest;
 
 use App\Notifications\OrderPlacedNotification;
 
@@ -28,10 +30,6 @@ class OrderController extends Controller
         return view('orders.add',compact('categories','products','user'));
     }
 
-    public function getProducts($category_id){
-        return Product::where('category_id', $category_id)->get();
-    }
-
     public function edit($id)
     {
         $order = Order::with('items')->findOrFail($id);
@@ -43,7 +41,7 @@ class OrderController extends Controller
     }
 
 
-    public function store(Request $request){
+    public function store(OrderStoreRequest $request){
         
         $order = Order::create([
                             'total_amount' => $request->total_amount,
@@ -69,9 +67,6 @@ class OrderController extends Controller
 
         try{
 
-            // mailable
-            // Mail::to($order->user->email)->send(new Orderplacedmail($order));
-            
             //notification
             $order->user->notify((new OrderPlacedNotification($order))->delay(now()->addMinutes(5)));
 
@@ -83,7 +78,7 @@ class OrderController extends Controller
         return redirect()->back()->with('success','Order Created successfully');
     }
 
-    public function update(Request $request, $id)
+    public function update(OrderUpdateRequest $request, $id)
     {
         $order = Order::findOrFail($id);
 
@@ -120,8 +115,11 @@ class OrderController extends Controller
 
     }
 
+    public function getProducts($category_id){
+        return Product::where('category_id', $category_id)->get();
+    }
+
     public function show($id){
-        // $id = Auth::user()->id;
         $orders = Order::with('items','items.order','items.product','items.category')->where('id',$id)->first();
 
         return view('orders.show', compact('orders'));

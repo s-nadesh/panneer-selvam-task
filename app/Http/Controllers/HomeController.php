@@ -65,7 +65,6 @@ class HomeController extends Controller
 
     $orderValues = $orderData->pluck('total');
 
-// dd($orderValues, $orderLabels, count($orderValues));
         return view('dashboard',compact('categories','products','user','order','role', 'userLabels','userValues',
         'orderLabels','orderValues'));
     }

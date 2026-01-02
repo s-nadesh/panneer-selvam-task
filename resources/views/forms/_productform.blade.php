@@ -59,17 +59,21 @@
     </div>
 
     @if($product->exists && !empty($productimg))
-        <div class="d-flex gap-3">
+        <div class="d-flex gap-3" id="productimage">
             @foreach($productimg as $row)
-                <div class="form-group">
-                    <img src="{{ asset('storage/product_img/'.$row->path) }}" width="80" class="img-thumbnail">
+                <div class="">
+                    <img src="{{ asset('storage/product_img/'.$row->path) }}" width="80" height="80" class="img-thumbnail">
+                    <div>
+                        <button class="btn btn-danger remove-image" type="button" data-id="{{$row->id}}">Remove</button>
+                    </div>
                 </div>
+                
             @endforeach
         </div>
     @endif
 
     
-    <button class="btn btn-primary" type="submit">
+    <button class="btn btn-primary mt-5" type="submit">
         {{ $product->exists ? 'Update product' : 'Create product' }}
     </button>
 </form>

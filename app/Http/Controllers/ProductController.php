@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Services\TagService;
 use App\Models\ProductImage;
 use App\Models\Tag;
+use App\Models\Image;
 use Illuminate\Http\Request;
 use App\DataTables\ProductsDataTable;
 use Illuminate\Support\Facades\Storage;
@@ -35,7 +37,7 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProductStoreRequest $request)
+    public function store(ProductStoreRequest $request,TagService $tagService)
     {
 
         $insertedid= Product::create([
@@ -47,7 +49,7 @@ class ProductController extends Controller
                     ]);
 
         if($insertedid->id){ 
-            $this->syncTags($insertedid, $request->tags);
+            $tagService->sync($insertedid, $request->tags);
             $productimage = "";
 
             if($request->hasFile('product_img')){
@@ -57,17 +59,11 @@ class ProductController extends Controller
 
                     $path = Storage::disk('public')->putFileAs('product_img', $file, $productimage);
 
-                    // ProductImage::create([
-                    //     'image'=> $productimage,
-                    //     'product_id' => $insertedid->id,
-                        
-                    // ]);
                     $insertedid->images()->create([
                         'path' => $productimage
                     ]);
                 }
             }
-            
             
         }
         return redirect()->route('products.index')->with('success', 'Product created!');
@@ -86,7 +82,7 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProductUpdateRequest $request, Product $product)
+    public function update(ProductUpdateRequest $request, Product $product, TagService $tagService)
     {
         
         $product->update([
@@ -98,14 +94,10 @@ class ProductController extends Controller
                     ]);
 
         $productimage = "";
-        $this->syncTags($product, $request->tags);
+        $tagService->sync($product, $request->tags);
+
         if($request->hasFile('product_img')){
 
-            foreach ($product->images as $image) {
-                Storage::disk('public')->delete('product_img/' . $image->path);
-            }
-
-            $product->images()->delete();
             
             foreach($request->file('product_img') as $file){
                 $productimage = time() . '.' . $file->getClientOriginalExtension();
@@ -121,8 +113,6 @@ class ProductController extends Controller
             }
         }
         
-         
-        
         return redirect()->route('products.index')->with('success', 'Product created!');
     }
 
@@ -135,20 +125,16 @@ class ProductController extends Controller
         return redirect()->route('products.index')->with('success', 'product deleted!');
     }
 
+    public function deleteimage(Image $image){
+        
+        Storage::disk('public')->delete('product_img/' . $image->path);
+        $image->delete();
 
-private function syncTags($model, $tagsJson)
-{
-    if (!$tagsJson) return;
+        return response()->json([
+            'success' => true,
+            'message' => 'Image deleted'
+        ]);
+    }
 
-    $tags = json_decode($tagsJson, true);
-
-    $tagIds = collect($tags)->map(function ($tag) {
-        return Tag::firstOrCreate([
-            'name' => $tag['value']
-        ])->id;
-    });
-
-    $model->tags()->sync($tagIds);
-}
 
 }
