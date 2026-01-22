@@ -34,13 +34,13 @@ class CategoryController extends Controller
      */
     public function store(CategoryStoreRequest $request, TagService $tagService)
     {
-        $url = "";
-        
+        $extension = "";
         if($request->hasFile('category_img')){
             
             $file = $request->file('category_img');
             $extension = time().'.'.$file->getClientOriginalExtension();
-            $url = Storage::disk('public')->putFileAs('category_imgs',$file, $extension);
+            Storage::disk('public')->putFileAs('category_imgs',$file, $extension);
+            $category->images()->create(['path' => $extension ]);
         }
 
         $category = Category::create([
@@ -48,10 +48,6 @@ class CategoryController extends Controller
         ]);
 
         $tagService->sync($category, $request->tags);
-
-        $category->images()->create([
-                        'path' => $extension
-                    ]);
 
         return redirect()->route('categorys.index')->with('success', 'Category created succesfully');
     }
@@ -70,8 +66,8 @@ class CategoryController extends Controller
     public function edit(Category $category)
     {
         $tags = $category->tags->pluck('name')->map(fn ($tag) => [
-        'value' => $tag
-    ]);
+            'value' => $tag
+        ]);
         return view('categorys.edit', compact('category','tags'));
     }
 
@@ -92,9 +88,7 @@ class CategoryController extends Controller
 
             Storage::disk('public')->putFileAs('category_imgs', $file, $category_img);
 
-            $category->images()->create([
-                        'path' => $category_img
-                    ]);
+           $category->images()->create(['path' => $category_img]);
         }
         $tagService->sync($category, $request->tags);
 
@@ -113,7 +107,6 @@ class CategoryController extends Controller
                 ->route('categorys.index')
                 ->with('error', 'Cannot delete category. It is assigned to products.');
         }
-
 
         $category->delete();
         return redirect()->route('categorys.index')->with('success', 'category deleted!');

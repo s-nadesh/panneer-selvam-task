@@ -97,16 +97,13 @@ class ProductController extends Controller
         $tagService->sync($product, $request->tags);
 
         if($request->hasFile('product_img')){
-
             
             foreach($request->file('product_img') as $file){
                 $productimage = time() . '.' . $file->getClientOriginalExtension();
 
                 Storage::disk('public')->putFileAs('product_img', $file, $productimage);
 
-                $product->images()->create(
-                    
-                    [
+                $product->images()->create([
                         'path' => $productimage
                     ]
                 );

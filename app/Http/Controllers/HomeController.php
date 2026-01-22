@@ -37,36 +37,35 @@ class HomeController extends Controller
         $role = Role::count();
 
         $userData = User::select(
-            DB::raw('DATE(created_at) as date'),
-            DB::raw('COUNT(*) as total')
-        )
-        ->groupBy('date')
-        ->orderBy('date', 'ASC')
-        ->get();
+                                DB::raw('DATE(created_at) as date'),
+                                DB::raw('COUNT(*) as total')
+                            )
+                            ->groupBy('date')
+                            ->orderBy('date', 'ASC')
+                            ->get();
 
-    $userLabels = $userData->pluck('date')->map(function ($date) {
-        return Carbon::parse($date)->toIso8601String();
-    });
+        $userLabels = $userData->pluck('date')->map(function ($date) {
+            return Carbon::parse($date)->toIso8601String();
+        });
 
-    $userValues = $userData->pluck('total');
+        $userValues = $userData->pluck('total');
 
-    // ----------- ORDERS PER DAY ---------------
-    $orderData = Order::select(
-            DB::raw('DATE(created_at) as date'),
-            DB::raw('COUNT(*) as total')
-        )
-        ->groupBy('date')
-        ->orderBy('date', 'ASC')
-        ->get();
+        // ----------- ORDERS PER DAY ---------------
+        $orderData = Order::select(
+                                DB::raw('DATE(created_at) as date'),
+                                DB::raw('COUNT(*) as total')
+                            )
+                            ->groupBy('date')
+                            ->orderBy('date', 'ASC')
+                            ->get();
 
-    $orderLabels = $orderData->pluck('date')->map(function ($date) {
-        return Carbon::parse($date)->toIso8601String();
-    });
+        $orderLabels = $orderData->pluck('date')->map(function ($date) {
+            return Carbon::parse($date)->toIso8601String();
+        });
 
-    $orderValues = $orderData->pluck('total');
+        $orderValues = $orderData->pluck('total');
 
-        return view('dashboard',compact('categories','products','user','order','role', 'userLabels','userValues',
-        'orderLabels','orderValues'));
+        return view('dashboard',compact('categories','products','user','order','role', 'userLabels','userValues','orderLabels','orderValues'));
     }
     
 }

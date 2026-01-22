@@ -57,7 +57,7 @@
     <div class="form-group">
         <label class="form-label" for="country">country</label>
         <select class="form-select form-select-sm mb-3 shadow-none" id="country" name="country">
-            <option selected="">Open this select menu</option>
+            <option selected="" value="">Open this select menu</option>
             <option value="india" {{ old('country', optional($professional)->country) == 'india' ? 'selected' : '' }}>india</option>
             <option value="china" {{ old('country', optional($professional)->country) == 'china' ? 'selected' : '' }}>china</option>
             <option value="cuba" {{ old('country', optional($professional)->country) == 'cuba' ? 'selected' : '' }}>cuba</option>
@@ -67,7 +67,7 @@
     <div class="form-group">
         <label class="form-label" for="gender">gender</label>
         <select class="form-select form-select-sm mb-3 shadow-none" id="gender" name="gender" required>
-            <option selected="">Open this select menu</option>
+            <option selected="" value="">Open this select menu</option>
             <option value="male" {{ old('gender', optional($professional)->gender) == 'male' ? 'selected' : '' }}>male</option>
             <option value="female" {{ old('gender', optional($professional)->gender) == 'female' ? 'selected' : '' }}>female</option>
             <option value="other" {{ old('gender', optional($professional)->gender) == 'other' ? 'selected' : '' }}>other</option>
