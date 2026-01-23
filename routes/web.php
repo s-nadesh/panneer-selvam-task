@@ -9,11 +9,15 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 Route::get('/', function () {
-    return view('auth.login');
+    return Inertia::render('Welcome');
 });
+
+Route::resource('posts', PostController::class);
 
 Route::get('/users/datatable', [UserController::class, 'getUsers'])->name('users.datatable');
 
