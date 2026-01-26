@@ -2,9 +2,8 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Gate;
-use App\Models\User;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,8 +20,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::define('manage-admin-content', function ($user) {
-            return $user->role === 'admin';
-        });
+        Vite::prefetch(concurrency: 3);
     }
 }
