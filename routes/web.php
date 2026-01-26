@@ -17,7 +17,9 @@ Route::get('/', function () {
     return Inertia::render('Welcome');
 });
 
-Route::resource('posts', PostController::class);
+Route::resource('posts', PostController::class)
+    ->only(['index', 'create', 'store', 'edit', 'update','destroy']);
+
 
 Route::get('/users/datatable', [UserController::class, 'getUsers'])->name('users.datatable');
 

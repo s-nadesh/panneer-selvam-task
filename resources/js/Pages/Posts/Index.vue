@@ -1,75 +1,62 @@
 <script setup>
+import EasyDataTable from 'vue3-easy-data-table'
+import { Link, router } from '@inertiajs/vue3'
+import { ref, watch } from 'vue'
 
-    import {ref} from 'vue'
-    import {useForm,router} from '@inertiajs/vue3'
+const props = defineProps({
+  posts: Object,
+  filters: Object,
+})
 
-    const props = defineProps({
-        posts: Array,
-        post:Array
-    })
+const headers = [
+  { text: 'ID', value: 'id' },
+  { text: 'Title', value: 'title' },
+  { text: 'Email', value: 'email' },
+  { text: 'Action', value: 'action' },
+]
 
-    const form = useForm({
-        title : props.post?.title || '',
-        email : props.post?.email || '',
-        image : null,
-    });
+const search = ref(props.filters.search ?? '')
 
-    function submit(){
-
-        if(props.post){
-            form.put(`/posts/${props.post.id}`,{
-                method:'put',
-                preserveScroll:true
-            })
-        }else{
-            form.post('/posts',{
-                preserveScroll:true,
-            })
-        }
-
+/* reload page with search */
+watch(search, (value) => {
+  router.get(
+    '/posts',
+    { search: value },
+    {
+      preserveState: true,
+      replace: true,
     }
+  )
+})
 
-    function remove(id){
-        router.delete(`/posts/${id}`)
-    }
+const deletepost = (id) => {
+  if(!confirm('Are you confirm to delete ?')) return
 
-    function edit(id){
-        router.get(`/posts/${id}/edit`)
-    }
-    
+  router.delete(`posts/${id}`,{
+    preserveScroll: true,
+  })
+} 
 </script>
 
 <template>
-    <h1>Post</h1>
-    <form @submit.prevent="submit">
+  <div style="margin-bottom:10px">
+    <input
+      v-model="search"
+      placeholder="Search title or email..."
+    />
 
-        <label>Title</label>
-        <input v-model="form.title" placeholder="post title">
-        <div v-if="form.errors.title">{{form.errors.title}}</div>
+    <Link href="/posts/create" style="margin-left:10px">
+      ➕ Add Post
+    </Link>
+  </div>
 
-        <div>
-            <label>email</label>
-            <input v-model="form.email" type="email">
-            <div v-if="form.errors.email">{{form.errors.email}}</div>
-        </div>
-
-        <div>
-            <label>Image</label>
-            <input type="file" @change="e=>form.image = e.target.files[0]" />
-        </div>
-        <div v-if="props.post?.image"><img :src="`${props.post.image}`" alt="image" width="160"></div>
-        
-        <button type="submit">{{props.post?'Update':'Add'}}</button>
-
-    </form>
-
-    <ul>
-        <li v-for="post in posts" :key="post.id">
-            {{post.title}}
-            <button @click="edit(post.id)">edit</button>
-            <button @click="remove(post.id)">Remove</button>
-        </li>
-    </ul>
-
+  <EasyDataTable
+    :headers="headers"
+    :items="posts.data"
+  >
+    <template #item-action="{ id }">
+      <Link :href="`/posts/${id}/edit`">Edit</Link>
+      <button @click=deletepost(id)>Delete</button>
+    </template>
+  </EasyDataTable>
 </template>
-

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\PostIndexRequest;
+use App\Http\Requests\PostStoreRequest;
+use App\Http\Requests\PostUpdateRequest;
 
 use Illuminate\Http\Request;
 
@@ -13,10 +16,20 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(PostIndexRequest $request)
     {
-        return Inertia::render('Posts/Index',[
-            'posts' => Post::all()
+        $posts = Post::query()
+        ->when($request->search, function ($q) use ($request) {
+            $q->where('title', 'like', '%' . $request->search . '%')
+              ->orWhere('email', 'like', '%' . $request->search . '%');
+        })
+        ->latest()
+        ->paginate(10)
+        ->withQueryString(); 
+
+        return Inertia::render('Posts/Index', [
+            'posts'   => $posts,
+            'filters' => $request->only('search'),
         ]);
     }
 
@@ -25,22 +38,19 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Posts/Create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PostStoreRequest $request)
     {
-        $request->validate([
-            'title' => 'required'
-        ]);
-
+        
         if($request->hasFile('image')){
             $image = $request->file('image');
             $imagename = time().'.'.$image->getClientOriginalExtension();
-            $path = Storage::disk('public')->put('uploads/image', $image);
+            $path = Storage::disk('public')->putFileAs('uploads/image', $image, $imagename);
             $url = Storage::url($path);
 
             $data['image'] = $url;
@@ -51,7 +61,7 @@ class PostController extends Controller
 
         Post::create($data);
 
-        return redirect()->back();
+        return redirect()->route('posts.index');
     }
 
     /**
@@ -66,22 +76,27 @@ class PostController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit(Post $post)
-    {
-        return  Inertia::render('Posts/Index',[
-            'post' => $post,
-            'posts' => Post::all()
+    { 
+        return  Inertia::render('Posts/Edit',[
+            'post' => $post
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Post $post,Request $request)
+    public function update(Post $post,PostUpdateRequest $request)
     {
+
+        $request->validate([
+            'title' => 'required',
+            'email' => 'required|email'
+        ]);
+        
         if($request->hasFile('image')){
             $image = $request->file('image');
             $imagename = time().'.'.$image->getClientOriginalExtension();
-            $path = Storage::disk('public')->put('uploads/image', $image);
+            $path = Storage::disk('public')->putFileAs('uploads/image', $image, $imagename);
             $url = Storage::url($path);
 
             $data['image'] = $url;

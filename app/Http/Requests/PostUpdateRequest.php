@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PostIndexRequest extends FormRequest
+class PostUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +22,8 @@ class PostIndexRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'page'      => 'integer|min:1',
-            'per_page'  => 'integer|min:5|max:100',
-            'search'    => 'nullable|string',
+            'title' => 'required',
+            'email' => 'required|email'
         ];
     }
 }
