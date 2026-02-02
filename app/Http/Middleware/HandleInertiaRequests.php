@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use  Auth;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -34,6 +35,12 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'cartCount' => function () use ($request) {
+            if (Auth::check()) {
+                return \App\Models\Cart::where('user_id', Auth::id())->sum('quantity');
+            }
+            return 0;
+        },
         ];
     }
 }

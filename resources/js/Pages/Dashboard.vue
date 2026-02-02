@@ -47,7 +47,7 @@ defineProps({
                         
                     </div>
 
-                    <h1>Task 1 </h1>
+                    <h1 class="text-lg font-bold">Task 1 </h1>
                     <Cards>
                         <TextInput v-model="name" />
                         <SaveButton @clicked="handleSave"/>
@@ -57,12 +57,16 @@ defineProps({
 
                     <br/>
 
-                    <h1>Task 2 </h1>
+                    <h1 class="text-lg font-bold">Task 2 </h1>
                     <AppLayout>
                         Body Content
                     </AppLayout>
-                    
-                    <a :href="route('page.estimate')">estimate</a>
+                    <br>
+                    <h1 class="text-lg font-bold">Task 3 </h1>
+                    <a :href="route('page.estimate')" class="bg-[#232F3E] text-white p-4 items-center align-items-center flex justify-center">estimate page</a>
+                    <br>
+                    <h1 class="text-lg font-bold">Task 4 </h1>
+                    <a :href="route('product.index')" class="bg-[#232F3E] text-white p-4 items-center align-items-center flex justify-center">product page</a>
                 </div>
             </div>
         </div>
