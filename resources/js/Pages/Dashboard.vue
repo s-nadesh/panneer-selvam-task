@@ -8,9 +8,15 @@ import Cards from '@/Components/Cards.vue';
 import TextInput from '@/Components/TextInput.vue';
 import Cancel from '@/Components/Cancel.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
+import {useToastStore} from '@/Stores/toast'
 
 const name = ref('')
 const message = ref('')
+const toast = useToastStore()
+
+const save = () => {
+    toast.success('Saved using Pinia 🎉')
+}
 
 function handleSave(){
     message.value = `Enter text: ${name.value}`;
@@ -23,6 +29,8 @@ function cancel(){
 defineProps({
     'username' : String
 })
+
+
 </script>
 
 <template>
@@ -67,6 +75,9 @@ defineProps({
                     <br>
                     <h1 class="text-lg font-bold">Task 4 </h1>
                     <a :href="route('product.index')" class="bg-[#232F3E] text-white p-4 items-center align-items-center flex justify-center">product page</a>
+                    </br>
+                    <h1 class="text-lg font-bold">Task 5 </h1>
+                    <button @click = "save" class="bg-[#232F3E] text-white p-4 items-center align-items-center flex justify-center w-full">Trigger toast</button>
                 </div>
             </div>
         </div>
