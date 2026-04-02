@@ -2,36 +2,90 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\ProfessionalDetail;
+use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use App\DataTables\UsersDataTable;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use App\Http\Requests\UserStoreRequest;
+use App\Http\Requests\UserUpdateRequest;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(UsersDataTable $dataTable)
     {
-        $users = User::paginate(10);
-        return view('users.index', compact('users'));
+        return $dataTable->render('users.index');
     }
+
+    // public function getUsers()
+    // {
+    //     $users = User::select('users.id','users.name','users.email','professional_details.profilepic')
+    //             ->leftJoin('professional_details', 'professional_details.user_id', '=', 'users.id');
+
+    //     return DataTables::of($users)
+    //         ->addColumn('profile_pics', function($user) {
+    //             $image = $user->profilepic 
+    //                 ? asset('storage/profile_pics/' . $user->profilepic)
+    //                 : asset('default.png');   // optional default image
+
+    //             return '<img src="'.$image.'" width="50" class="rounded-circle" />';
+    //         })
+    //         ->addColumn('action', function ($user) {
+    //             return view('users.actions', compact('user'))->render();
+    //         })
+    //         ->rawColumns(['profile_pics','action'])
+    //         ->make(true);
+    // }
+
 
     public function create()
     {
-        return view('users.create');
-    }
+        // $modules = [
+        //     'users' => Permission::where('name', 'LIKE', 'users.%')->get(),
+        //     'products' => Permission::where('name', 'LIKE', 'products.%')->get(),
+        //     'categorys' => Permission::where('name', 'LIKE', 'categorys.%')->get(),
+        //     // add more modules…
+        // ];
 
-    public function store(Request $request)
+        $roles = Role::all();
+
+        return view('users.create',compact('roles'));
+    } 
+
+    public function store(UserStoreRequest $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6'
-        ]);
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        $insertedid= User::create([
+                        'name' => $request->name,
+                        'email' => $request->email,
+                        'password' => Hash::make($request->password),
+                    ]);
+                 
+        if($insertedid->id){
 
+            $profilepicture = "";
+
+            if($request->hasFile('profilepic')){
+                
+                $file = $request->file('profilepic');
+                $profilepicture = time() . '.' . $file->getClientOriginalExtension();
+
+                Storage::disk('public')->putFileAs('profile_pics', $file, $profilepicture);
+            }
+            
+            ProfessionalDetail::create([
+                'profilepic'=> $profilepicture,
+                'user_id' => $insertedid->id,
+                'address' => $request->address,
+                'gender' => $request->gender,
+                'country' => $request->country,
+                'date_of_birth' => $request->date_of_birth
+
+            ]);
+        }
         return redirect()->route('users.index')->with('success', 'User created!');
     }
 
@@ -42,25 +96,56 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        return view('users.edit', compact('user'));
+        $professional = $user->professionalDetail;
+        $roles = Role::all();
+         $modules = [
+            'users' => Permission::where('name', 'LIKE', 'users.%')->get(),
+            'products' => Permission::where('name', 'LIKE', 'products.%')->get(),
+            'categorys' => Permission::where('name', 'LIKE', 'categorys.%')->get(),
+        ];
+        return view('users.edit', compact('user','professional', 'roles'));
     }
 
-    public function update(Request $request, User $user)
+    public function update(UserUpdateRequest $request, User $user)
     {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'password' => 'nullable|min:6'
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
         ]);
 
-        $user->name = $request->name;
-        $user->email = $request->email;
 
-        if ($request->password) {
-            $user->password = Hash::make($request->password);
+        if ($request->filled('role')) {
+            // replace roles with selected single role
+            $user->syncRoles($request->role);
+        } else {
+            // if none selected and you want to remove roles:
+            $user->syncRoles([]);
         }
 
-        $user->save();
+
+        $profilepicture = "";
+
+        if($request->hasFile('profilepic')){
+            if($user->profilepic && Storage::exists('public/profilepic/'. $request->profilepic)){    
+                Storage::disk('public')->delete('profile_pics/'.$user->profile_pic);
+            }
+            $file = $request->file('profilepic');
+            $profilepicture = time() . '.' . $file->getClientOriginalExtension();
+
+            Storage::disk('public')->putFileAs('profile_pics', $file, $profilepicture);
+        }
+
+        $user->professionalDetail()->updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'profilepic' => $profilepicture,
+                'address' => $request->address,
+                'gender' => $request->gender,
+                'country' => $request->country,
+                'date_of_birth' => $request->date_of_birth,
+            ]
+        );
 
         return redirect()->route('users.index')->with('success', 'User updated!');
     }
